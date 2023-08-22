@@ -1,0 +1,66 @@
+[tool.poetry]
+name = "robyn-rate-limits"
+version = "0.1.0"
+description = ""
+authors = ["IdoKendo <ryuusuke@gmail.com>"]
+readme = "README.md"
+packages = [{include = "robyn_rate_limits"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+cachetools = "^5"
+redis = { version = "^5", optional = true }
+robyn = "^0.37"
+
+[tool.poetry.extras]
+redis = [ "redis"]
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+fakeredis = "^2"
+pre-commit = "^3"
+pytest = "^7"
+requests = "^2"
+tox = "^4"
+uvloop = "^0.17"
+
+[tool.poetry.scripts]
+test_server = { callable = "tests.base_routes:main" }
+
+[tool.pytest.ini_options]
+addopts = "-v"
+testpaths = ["tests"]
+
+[tool.ruff]
+src = ["robyn_rate_limits", "tests"]
+target-version = "py38"
+select = [
+    "A",    #  builtins
+    "ARG",  #  unsued arguments
+    "B",    #  bugbear
+    "C4",   #  comprehensions
+    "C90",  #  mccabe
+    "COM",  #  commas
+    "E",    #  pycodestyle
+    "F",    #  pyflakes
+    "I",    #  isort
+    "N",    #  pep8-naming
+    "PT",   #  pytest style
+    "RUF",  #  ruff
+    "SIM",  #  simplify
+    "TID",  #  tidy imports
+    "UP",   #  pyupgrade
+    "W",    #  warnings
+]
+
+[tool.ruff.mccabe]
+max-complexity = 8
+
+[tool.ruff.isort]
+force-single-line = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
