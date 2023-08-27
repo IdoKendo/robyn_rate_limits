@@ -4,7 +4,7 @@ This is an extension for [Robyn](https://robyn.tech/) that allows rate limiting 
 
 ## Installation
 
-You can get [`robyn-rate-limits` from PyPI](https://pypi.org/project/mysql-context-manager/), whichm means you can install it with pip easily:
+You can get [`robyn-rate-limits` from PyPI](https://pypi.org/project/robyn-rate-limits/), whichm means you can install it with pip easily:
 
 ```bash
 python -m pip install robyn-rate-limits
