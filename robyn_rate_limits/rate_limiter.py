@@ -26,7 +26,7 @@ class RateLimiter:
         else:
             self.exceeded_response = Response(
                 status_code=429,
-                body="Rate limit exceeded!",
+                description="Rate limit exceeded!",
                 headers={},
             )
 
