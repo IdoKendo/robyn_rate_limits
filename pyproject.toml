@@ -36,6 +36,7 @@ testpaths = ["tests"]
 [tool.ruff]
 src = ["robyn_rate_limits", "tests"]
 target-version = "py38"
+line-length = 99
 select = [
     "A",    #  builtins
     "ARG",  #  unsued arguments

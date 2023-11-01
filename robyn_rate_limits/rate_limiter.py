@@ -34,7 +34,7 @@ class RateLimiter:
         if self.calls_limit <= 0:
             return request
         if request.identity is not None and app.authentication_handler is not None:
-            identity = app.authentication_handler.token_getter.get_token(request)
+            identity = app.authentication_handler.token_getter.get_token(request)  # type: ignore
         else:
             identity = request.ip_addr
         if identity:
