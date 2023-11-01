@@ -10,7 +10,7 @@ packages = [{include = "robyn_rate_limits"}]
 python = "^3.8"
 cachetools = "^5"
 redis = { version = "^5", optional = true }
-robyn = "^0.37"
+robyn = "^0.44"
 
 [tool.poetry.extras]
 redis = [ "redis"]
@@ -24,7 +24,7 @@ pre-commit = "^3"
 pytest = "^7"
 requests = "^2"
 tox = "^4"
-uvloop = "^0.17"
+uvloop = "^0.19"
 
 [tool.poetry.scripts]
 test_server = { callable = "tests.base_routes:main" }
