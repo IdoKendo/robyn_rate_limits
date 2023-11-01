@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "robyn-rate-limits"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["IdoKendo <ryuusuke@gmail.com>"]
 readme = "README.md"
