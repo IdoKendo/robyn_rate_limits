@@ -4,20 +4,19 @@ from redis import Redis
 from robyn_rate_limits.protocols import LimitStore
 
 
-class RedisStore:
+class RedisStore(LimitStore):
     def __init__(self, redis: Redis, limit_ttl: int):
         self.redis = redis
         self.limit_ttl = limit_ttl
 
     def get_calls_count(self, limit_key: str, current_timestamp: int) -> int:
-        self.redis.zadd(limit_key, {str(current_timestamp): current_timestamp})
-        self.redis.zremrangebyscore(
-            limit_key,
-            "-inf",
-            current_timestamp - self.limit_ttl,
-        )
-        self.redis.expire(limit_key, self.limit_ttl)
-        return self.redis.zcard(limit_key)  # type: ignore
+        pipeline = self.redis.pipeline()
+        pipeline.zadd(limit_key, {str(current_timestamp): current_timestamp})
+        pipeline.zremrangebyscore(limit_key, "-inf", current_timestamp - self.limit_ttl)
+        pipeline.expire(limit_key, self.limit_ttl)
+        pipeline.zcard(limit_key)
+        _, _, _, count = pipeline.execute()
+        return count
 
 
 class RedisFixedWindowStore(LimitStore):
@@ -28,13 +27,13 @@ class RedisFixedWindowStore(LimitStore):
 
     def get_calls_count(self, limit_key: str, current_timestamp: int) -> int:
         window_start = current_timestamp - self.window_size
-        self.redis.zadd(limit_key, {str(current_timestamp): current_timestamp})
-        self.redis.zremrangebyscore(limit_key, "-inf", window_start)
-        self.redis.expire(
-            limit_key,
-            self.window_size + self.limit_ttl,
-        )  # Ensure expiration for late calls
-        return self.redis.zcard(limit_key)
+        pipeline = self.redis.pipeline()
+        pipeline.zadd(limit_key, {str(current_timestamp): current_timestamp})
+        pipeline.zremrangebyscore(limit_key, "-inf", window_start)
+        pipeline.expire(limit_key, self.window_size + self.limit_ttl)
+        pipeline.zcard(limit_key)
+        _, _, _, count = pipeline.execute()
+        return count
 
 
 class RedisTokenBucketStore(LimitStore):
@@ -42,33 +41,35 @@ class RedisTokenBucketStore(LimitStore):
         self,
         redis: Redis,
         calls_limit: int,
-        refill_rate: int,
+        refill_rate: float,
         capacity: Optional[int] = None,
     ):
         self.redis = redis
         self.calls_limit = calls_limit
         self.refill_rate = refill_rate
-        self.capacity = capacity if capacity else calls_limit
+        self.capacity = capacity if capacity is not None else calls_limit
 
     def get_calls_count(self, limit_key: str, current_timestamp: int) -> int:
-        available_tokens = self.redis.get(limit_key) or self.capacity  # Initialize at capacity
-        last_refill = (
-            self.redis.get(f"{limit_key}_last_refill") or current_timestamp
-        )  # Initialize last refill
-        refill_amount = (
-            current_timestamp - int(last_refill)
-        ) * self.refill_rate  # Calculate refill tokens
-        available_tokens = min(
-            available_tokens + refill_amount,
-            self.capacity,
-        )  # Refill, but don't exceed capacity
-        self.redis.set(
-            f"{limit_key}_last_refill",
-            current_timestamp,
-        )  # Update last refill timestamp
+        tokens_key = f"{limit_key}_tokens"
+        last_refill_key = f"{limit_key}_last_refill"
 
-        if int(available_tokens) > 0:
-            self.redis.decr(limit_key)  # Consume a token
-            return 0  # Allow the request
-        else:
-            return self.calls_limit  # Reject the request
+        def update_tokens(pipe):
+            available_tokens, last_refill = pipe.mget(tokens_key, last_refill_key)
+            available_tokens = float(available_tokens or self.capacity)
+            last_refill = int(last_refill or current_timestamp)
+
+            refill_amount = (current_timestamp - last_refill) * self.refill_rate
+            new_tokens = min(available_tokens + refill_amount, self.capacity)
+
+            if new_tokens >= 1:
+                pipe.multi()
+                pipe.set(tokens_key, new_tokens - 1)
+                pipe.set(last_refill_key, current_timestamp)
+                return 0  # Allow the request
+            else:
+                pipe.multi()
+                pipe.set(tokens_key, new_tokens)
+                pipe.set(last_refill_key, current_timestamp)
+                return self.calls_limit  # Reject the request
+
+        return self.redis.transaction(update_tokens, tokens_key, last_refill_key)
