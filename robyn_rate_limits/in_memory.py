@@ -4,10 +4,8 @@ from typing import Optional
 
 import cachetools
 
-from robyn_rate_limits.protocols import LimitStore
 
-
-class InMemoryStore(LimitStore):
+class InMemoryStore:
     """InMemoryStore: Implements a sliding window rate limiting strategy."""
 
     def __init__(self, limit_ttl: int):
@@ -32,7 +30,7 @@ class InMemoryStore(LimitStore):
         return len(timestamps)
 
 
-class InMemoryFixedWindowStore(LimitStore):
+class InMemoryFixedWindowStore:
     """InMemoryFixedWindowStore: Implements a fixed window rate limiting strategy."""
 
     def __init__(self, limit_ttl: int, window_size: int = 60):
@@ -59,7 +57,7 @@ class TokenBucket(NamedTuple):
     last_refill: int
 
 
-class InMemoryTokenBucketStore(LimitStore):
+class InMemoryTokenBucketStore:
     """InMemoryTokenBucketStore: Implements a token bucket rate limiting strategy."""
 
     def __init__(self, calls_limit: int, refill_rate: int, capacity: Optional[int] = None):

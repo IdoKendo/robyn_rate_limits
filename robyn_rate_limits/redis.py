@@ -1,10 +1,9 @@
 from typing import Optional
 
 from redis import Redis
-from robyn_rate_limits.protocols import LimitStore
 
 
-class RedisStore(LimitStore):
+class RedisStore:
     def __init__(self, redis: Redis, limit_ttl: int):
         self.redis = redis
         self.limit_ttl = limit_ttl
@@ -19,7 +18,7 @@ class RedisStore(LimitStore):
         return count
 
 
-class RedisFixedWindowStore(LimitStore):
+class RedisFixedWindowStore:
     def __init__(self, redis: Redis, limit_ttl: int, window_size: int = 60):
         self.redis = redis
         self.limit_ttl = limit_ttl
@@ -36,7 +35,7 @@ class RedisFixedWindowStore(LimitStore):
         return count
 
 
-class RedisTokenBucketStore(LimitStore):
+class RedisTokenBucketStore:
     def __init__(
         self,
         redis: Redis,
