@@ -7,6 +7,8 @@ from robyn import Request
 from robyn import Response
 from robyn import Robyn
 
+from robyn_rate_limits.protocols import LimitStore
+
 
 class RateLimiter:
     def __init__(
