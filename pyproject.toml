@@ -37,6 +37,8 @@ testpaths = ["tests"]
 src = ["robyn_rate_limits", "tests"]
 target-version = "py38"
 line-length = 99
+
+[tool.ruff.lint]
 select = [
     "A",    #  builtins
     "ARG",  #  unsued arguments
@@ -55,11 +57,14 @@ select = [
     "UP",   #  pyupgrade
     "W",    #  warnings
 ]
+ignore = [
+    "COM812",  # avoid conflicts
+]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 8
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 force-single-line = true
 
 [build-system]
