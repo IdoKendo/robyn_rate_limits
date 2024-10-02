@@ -61,7 +61,7 @@ class InMemoryTokenBucketStore:
     """InMemoryTokenBucketStore: Implements a token bucket rate limiting strategy."""
 
     def __init__(self, calls_limit: int, refill_rate: int, capacity: Optional[int] = None):
-        self.cache: cachetools.TTLCache = cachetools.TTLCache(maxsize=1024, ttl=None)
+        self.cache: cachetools.Cache = cachetools.Cache(maxsize=1024)
         self.calls_limit = calls_limit
         self.refill_rate = refill_rate
         self.capacity = capacity if capacity is not None else calls_limit
