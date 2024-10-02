@@ -71,4 +71,4 @@ class RedisTokenBucketStore:
                 pipe.set(last_refill_key, current_timestamp)
                 return self.calls_limit  # Reject the request
 
-        return self.redis.transaction(update_tokens, tokens_key, last_refill_key)
+        return self.redis.transaction(update_tokens, tokens_key, last_refill_key)  # type: ignore
