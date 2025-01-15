@@ -1,4 +1,3 @@
-from typing import List
 from typing import NamedTuple
 from typing import Optional
 
@@ -23,7 +22,7 @@ class InMemoryStore:
         Returns:
             int: The number of calls within the time window.
         """
-        timestamps: List[int] = self.cache.get(limit_key, [])
+        timestamps: list[int] = self.cache.get(limit_key, [])
         timestamps = [t for t in timestamps if t > current_timestamp - self.limit_ttl]
         timestamps.append(current_timestamp)
         self.cache[limit_key] = timestamps
