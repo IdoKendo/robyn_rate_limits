@@ -3,7 +3,7 @@ import importlib
 from robyn_rate_limits.in_memory import InMemoryStore
 from robyn_rate_limits.rate_limiter import RateLimiter
 
-__all__ = ["RateLimiter", "InMemoryStore"]
+__all__ = ["InMemoryStore", "RateLimiter"]
 
 try:
     importlib.import_module("redis")

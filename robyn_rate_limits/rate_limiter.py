@@ -1,6 +1,5 @@
 import time
 from typing import Optional
-from typing import Type
 from typing import Union
 
 from robyn import Request
@@ -14,7 +13,7 @@ class RateLimiter:
     def __init__(
         self,
         *,
-        store: Type[LimitStore],
+        store: type[LimitStore],
         calls_limit: int = 0,
         exceeded_response: Optional[Response] = None,
         **kwargs,
