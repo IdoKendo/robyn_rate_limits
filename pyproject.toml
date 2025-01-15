@@ -10,7 +10,7 @@ packages = [{include = "robyn_rate_limits"}]
 python = "^3.9"
 cachetools = "^5"
 redis = { version = "^5", optional = true }
-robyn = "^0.44"
+robyn = "^0.65"
 
 [tool.poetry.extras]
 redis = [ "redis"]
