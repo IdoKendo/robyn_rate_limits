@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "robyn-rate-limits"
-version = "0.3.0"
+version = "0.4.0"
 description = ""
 authors = ["IdoKendo <ryuusuke@gmail.com>"]
 readme = "README.md"
 packages = [{include = "robyn_rate_limits"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 cachetools = "^5"
 redis = { version = "^5", optional = true }
 robyn = "^0.44"
@@ -35,7 +35,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 src = ["robyn_rate_limits", "tests"]
-target-version = "py38"
+target-version = "py39"
 line-length = 99
 
 [tool.ruff.lint]
