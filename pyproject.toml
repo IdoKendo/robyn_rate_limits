@@ -24,7 +24,6 @@ pre-commit = "^3"
 pytest = "^7"
 requests = "^2"
 tox = "^4"
-uvloop = "^0.19"
 
 [tool.poetry.scripts]
 test_server = { callable = "tests.base_routes:main" }
