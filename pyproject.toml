@@ -1,32 +1,32 @@
-[tool.poetry]
+[project]
 name = "robyn-rate-limits"
 version = "0.4.0"
 description = ""
-authors = ["IdoKendo <ryuusuke@gmail.com>"]
+authors = [{name = "IdoKendo", email = "ryuusuke@gmail.com"}]
 readme = "README.md"
+requires-python = ">=3.9"
 packages = [{include = "robyn_rate_limits"}]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-cachetools = "^5"
-redis = { version = "^5", optional = true }
-robyn = "^0.65"
+dependencies = [
+    "cachetools>=5",
+    "robyn>=0.72",
+    "redis>=5; extra == \"redis\"",
+]
 
-[tool.poetry.extras]
-redis = [ "redis"]
+[project.optional-dependencies]
+redis = ["redis>=5"]
 
-[tool.poetry.group.dev]
-optional = true
+[project.scripts]
+test_server = "tests.base_routes:main"
 
-[tool.poetry.group.dev.dependencies]
-fakeredis = "^2"
-pre-commit = "^3"
-pytest = "^7"
-requests = "^2"
-tox = "^4"
-
-[tool.poetry.scripts]
-test_server = { callable = "tests.base_routes:main" }
+[dependency-groups]
+dev = [
+    "fakeredis>=2",
+    "pre-commit>=3",
+    "pytest>=7",
+    "requests>=2",
+    "tox>=4",
+]
 
 [tool.pytest.ini_options]
 addopts = "-v"
@@ -67,5 +67,5 @@ max-complexity = 8
 force-single-line = true
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
