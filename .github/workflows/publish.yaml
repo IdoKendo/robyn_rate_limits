@@ -19,14 +19,12 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install poetry and dependencies
+      - name: Install uv and dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install poetry
-      - name: Configure poetry
-        env:
-          pypi_token: ${{ secrets.PyPI_TOKEN }}
-        run: poetry config pypi-token.pypi $pypi_token
+          python -m pip install uv
 
       - name: Build and publish
-        run: poetry publish --build
+        env:
+          pypi_token: ${{ secrets.PyPI_TOKEN }}
+        run: uv build && uv publish --token $pypi_token

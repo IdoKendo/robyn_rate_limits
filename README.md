@@ -131,11 +131,11 @@ Feel free to open issues if you have any question or suggestion.
 
 ## Local development
 
-1. Install the development dependencies: `poetry install --with dev`
+1. Install the development dependencies: `uv sync --group dev`
 
 2. Install the pre-commit git hooks: `pre-commit install`
 
-3. Run `poetry run test_server`. This will run a server containing several examples of routes we use for testing purposes. You can see them at `tests/base_routes.py`. You can modify or add some to your likings.
+3. Run `uv run test_server`. This will run a server containing several examples of routes we use for testing purposes. You can see them at `tests/base_routes.py`. You can modify or add some to your likings.
 
 You can then request the server you ran from an other terminal. Here is a `GET` request done using [curl](https://curl.se/) for example:
 
